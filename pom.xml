@@ -191,6 +191,13 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- Jedis客户端依赖 -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

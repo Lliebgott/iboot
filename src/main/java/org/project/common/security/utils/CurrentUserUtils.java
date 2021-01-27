@@ -15,7 +15,7 @@ public class CurrentUserUtils {
     @Autowired
     private UserService userService;
 
-    private static String getCurrentUsername() {
+    public static String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() != null) {
             return ((String) authentication.getPrincipal());

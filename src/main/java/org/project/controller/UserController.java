@@ -12,12 +12,10 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.project.common.attachment.Folders;
 import org.project.common.logger.Logger;
 import org.project.common.logger.Operation;
 import org.project.common.response.Res;
 import org.project.common.utils.Excels;
-import org.project.common.utils.FileUploads;
 import org.project.entity.UserEntity;
 import org.project.entity.ViewObject.UserVO;
 import org.project.entity.condition.UserCondition;
@@ -42,9 +40,6 @@ public class UserController {
 
     @Resource
     private Excels excels;
-
-    @Resource
-    private FileUploads fileUploads;
 
     @Resource
     private UserService userService;
@@ -270,7 +265,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Res updateAvatar(@RequestParam("file") MultipartFile file) {
         return Res.ok()
-                .data("path", fileUploads.upload(Folders.Avatar, file));
+                .data("path", userService.uploadavatar(file));
     }
 
     @ApiOperation(value = "获取用户昵称邮箱列表", notes = "获取用户昵称和邮箱列表并返回值前端",

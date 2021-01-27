@@ -4,6 +4,7 @@ import org.project.entity.ViewObject.UserMailVO;
 import org.project.entity.ViewObject.UserVO;
 import org.project.entity.condition.UserCondition;
 import org.project.entity.UserEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,5 +29,7 @@ public interface UserService {
     List<Integer> getRoleListById(int id);
 
     List<UserMailVO> getUserMailList();
+
+    String uploadavatar(MultipartFile file);
 
 }

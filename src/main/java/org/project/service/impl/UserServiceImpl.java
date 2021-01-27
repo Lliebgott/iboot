@@ -1,5 +1,12 @@
 package org.project.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import org.project.common.attachment.Folders;
+import org.project.common.redis.constant.RedisType;
+import org.project.common.redis.operator.RedisService;
+import org.project.common.security.utils.CurrentUserUtils;
+import org.project.common.utils.FileUploads;
 import org.project.entity.UserEntity;
 import org.project.entity.ViewObject.UserMailVO;
 import org.project.entity.ViewObject.UserVO;
@@ -11,8 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,6 +33,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private RoleMapper roleMapper;
+
+    @Resource
+    private FileUploads fileUploads;
+
+    @Resource
+    private RedisService redisService;
 
     @Override
     public List<UserVO> getPage(UserCondition condition) {
@@ -77,4 +93,21 @@ public class UserServiceImpl implements UserService {
         return userMapper.getUserMailList();
     }
 
+    @Override
+    public String uploadavatar(MultipartFile file) {
+        String userName = CurrentUserUtils.getCurrentUsername();
+        String path = fileUploads.upload(Folders.Avatar, file);
+        UserEntity entity = getUserByName(userName);
+        entity.setAvatar(path);
+        entity.setModifyTime(new Date());
+
+
+        List<Object> list = new ArrayList<>();
+        list.add(entity.getClass());
+        list.add(entity);
+        System.out.println(redisService.getKey("user::" + userName, "string"));
+        redisService.updateByKey("user::" + userName, JSONArray.toJSONString(list), RedisType.STRING);
+        System.out.println(redisService.getKey("user::" + userName, "string"));
+        return path;
+    }
 }
